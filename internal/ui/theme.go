@@ -15,13 +15,17 @@ var (
 )
 
 const (
-	sizeMain    = 280.0
-	sizePenalty = 80.0
+	sizeMain    = 340.0
+	sizePenalty = 64.0
 	sizeStatus  = 28.0
 	sizeHelp    = 22.0
+	sizeFouls   = 100.0
+	mainClockY  = 100.0
+	foulsY      = 20.0
+	foulsMargin = 20.0
 
-	penaltyTopY    = 440.0
-	penaltyStepY   = 80.0
+	penaltyTopY    = 470.0
+	penaltyStepY   = 65.0
 	penaltyMargin  = 50.0
 	maxPenaltyRows = 3
 )

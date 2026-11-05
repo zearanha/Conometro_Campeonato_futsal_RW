@@ -3,8 +3,9 @@ package match
 import "time"
 
 const (
-	Duration        = 20 * time.Minute
+	Duration        = 10 * time.Minute
 	PenaltyDuration = 2 * time.Minute
+	MaxFouls        = 5
 )
 
 type Team int
@@ -18,6 +19,7 @@ type Match struct {
 	remaining time.Duration
 	running   bool
 	penalties [2][]time.Duration
+	fouls     [2]int
 }
 
 func New() *Match {
@@ -32,6 +34,8 @@ func (m *Match) Finished() bool           { return m.remaining == 0 }
 func (m *Match) Penalties(t Team) []time.Duration {
 	return append([]time.Duration(nil), m.penalties[t]...)
 }
+
+func (m *Match) Fouls(t Team) int { return m.fouls[t] }
 
 // Toggle inicia ou pausa o jogo. Não faz nada se o jogo já acabou.
 func (m *Match) Toggle() {
@@ -52,6 +56,15 @@ func (m *Match) AddPenalty(t Team) {
 		return
 	}
 	m.penalties[t] = append(m.penalties[t], PenaltyDuration)
+	m.AddFoul(t)
+}
+
+// AddFoul registra uma falta para o time até o limite permitido.
+func (m *Match) AddFoul(t Team) {
+	if m.Finished() || m.fouls[t] >= MaxFouls {
+		return
+	}
+	m.fouls[t]++
 }
 
 // Tick avança o relógio. Só tem efeito com o jogo rodando.

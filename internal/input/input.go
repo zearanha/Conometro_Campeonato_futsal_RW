@@ -11,6 +11,7 @@ const (
 	ToggleClock Command = iota
 	ResetMatch
 	StartExpulsion
+	StartFoul
 	PickLeft
 	PickRight
 	Cancel
@@ -24,6 +25,7 @@ var bindings = []struct {
 	{ebiten.KeySpace, ToggleClock},
 	{ebiten.KeyR, ResetMatch},
 	{ebiten.KeyE, StartExpulsion},
+	{ebiten.KeyF, StartFoul},
 	{ebiten.KeyArrowLeft, PickLeft},
 	{ebiten.KeyArrowRight, PickRight},
 	{ebiten.KeyEscape, Cancel},

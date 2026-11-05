@@ -58,7 +58,11 @@ func drawText(screen *ebiten.Image, s string, size, x, y float64, a align, clr c
 func (g *Game) Draw(screen *ebiten.Image) {
 	screen.Fill(colorBG)
 
-	drawText(screen, formatDuration(g.match.Remaining()), sizeMain, screenW/2, 150, alignCenter, colorOrange)
+	drawText(screen, fmt.Sprintf("%d", g.match.Fouls(match.Left)),
+		sizeFouls, foulsMargin, foulsY, alignLeft, colorWhite)
+	drawText(screen, fmt.Sprintf("%d", g.match.Fouls(match.Right)),
+		sizeFouls, screenW-foulsMargin, foulsY, alignRight, colorWhite)
+	drawText(screen, formatDuration(g.match.Remaining()), sizeMain, screenW/2, mainClockY, alignCenter, colorOrange)
 
 	g.drawPenalties(screen, match.Left, penaltyMargin, alignLeft)
 	g.drawPenalties(screen, match.Right, screenW-penaltyMargin, alignRight)
@@ -66,7 +70,7 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	if msg := g.statusMessage(); msg != "" {
 		drawText(screen, msg, sizeStatus, screenW/2, 20, alignCenter, colorHint)
 	}
-	drawText(screen, "Espaco: iniciar/pausar   R: reiniciar   E: expulsao   F11: tela cheia",
+	drawText(screen, "Espaco: iniciar/pausar   R: reiniciar   E: expulsao   F: falta   F11: tela cheia",
 		sizeHelp, screenW/2, screenH-35, alignCenter, colorHint)
 }
 
@@ -82,8 +86,10 @@ func (g *Game) drawPenalties(screen *ebiten.Image, t match.Team, x float64, a al
 
 func (g *Game) statusMessage() string {
 	switch {
-	case g.awaitingTeam:
+	case g.selection == expulsionSelection:
 		return "EXPULSAO: aperte < ou > para escolher o time (Esc cancela)"
+	case g.selection == foulSelection:
+		return "FALTA: aperte < ou > para escolher o time (Esc cancela)"
 	case g.match.Finished():
 		return "FIM DE JOGO  -  R para reiniciar"
 	case !g.match.Running():
